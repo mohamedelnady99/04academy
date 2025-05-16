@@ -7,7 +7,7 @@ import { SiSepa } from 'react-icons/si';
 import { Button } from '@mui/material';
 import translations from './translations.js'; // Assuming translations are in a separate JSON file
 import arbFlag from "../public/sudy.png";
-import engFlag from "../public/eng.webp";
+import engFlag from "../public/eng.png";
 
 function App() {
   const [lang, setLang] = useState('en');
