@@ -158,7 +158,7 @@ function App() {
       <section className="bg-white rounded-lg shadow-lg flex flex-col md:flex-row w-full max-w-4xl">
         {/* Registration Form */}
         <div className="flex-1 p-6 md:border-r border-gray-200">
-          <h2 className="text-xl text-center font-bold mb-1">{t.register}</h2>
+          <h2 className="text-xl text-black text-center font-bold mb-1">{t.register}</h2>
           <p className="text-center text-gray-500 mb-8">{t.summary}</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
