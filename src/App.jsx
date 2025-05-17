@@ -1,6 +1,4 @@
 import { useState } from 'react';
-// import { useFormik } from 'formik'
-// import * as yup from 'yup'
 import { FiGlobe } from 'react-icons/fi';
 import { FaCcVisa, FaCcMastercard, FaCcAmex, FaCreditCard } from 'react-icons/fa';
 import { SiSepa } from 'react-icons/si';
@@ -15,7 +13,6 @@ function App() {
   const [lang, setLang] = useState('en');
   const [formData, setFormData] = useState({
     email: '',
-    parentEmail: '',
     firstName: '',
     lastName: '',
     phone: '',
@@ -33,11 +30,8 @@ function App() {
     acceptTerms: false
   });
 
-
-
   const [errors, setErrors] = useState({});
   const t = translations[lang];
-  // const [sessions, setSessions] = useState(4);
   const plans = [
     { label: "6 MONTHS", months: 6, sessions: 8, price: 29.6, discount: 4 },
     { label: "9 MONTHS", months: 9, sessions: 8, price: 31.2, discount: 5 },
@@ -46,17 +40,15 @@ function App() {
     { label: "24 MONTHS", months: 24, sessions: 8, price: 75.0, discount: 8 },
     { label: "36 MONTHS", months: 36, sessions: 8, price: 90.0, discount: 9 },
   ];
-
   const [selectedPlan, setSelectedPlan] = useState(plans[0]);
   const [payInAdvance, setPayInAdvance] = useState(false);
-
   const discountedPrice =
     selectedPlan.price - (selectedPlan.price * selectedPlan.discount) / 100;
-
   const finalPrice = payInAdvance
     ? discountedPrice * 0.97 // خصم إضافي 3%
     : discountedPrice;
-
+   
+  // Handle input change
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -74,50 +66,21 @@ function App() {
   };
 
   // Handle phone input change
-  const handlePhoneChange = (value, data, name) => {
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+  // const handlePhoneChange = (value, data, name) => {
+  //   setFormData({
+  //     ...formData,
+  //     [name]: value
+  //   });
 
     // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: ''
-      });
-    }
-  };
+  //   if (errors[name]) {
+  //     setErrors({
+  //       ...errors,
+  //       [name]: ''
+  //     });
+  //   }
+  // };
 
-  const validateField = (name, value) => {
-    switch (name) {
-      case 'email':
-      case 'parentEmail':
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return value ? (emailRegex.test(value) ? '' : t.invalidEmail) : t.required;
-      case 'phone':
-      case 'parentPhone':
-        return value ? (value.length >= 8 ? '' : t.invalidPhone) : t.required;
-      case 'firstName':
-      case 'lastName':
-      case 'address':
-      case 'city':
-      case 'country':
-      case 'cardHolder':
-        return value ? '' : t.required;
-      case 'cardNumber':
-        const cardRegex = /^[0-9]{13,19}$/;
-        return value ? (cardRegex.test(value) ? '' : 'Invalid card number') : t.required;
-      case 'expiry':
-        const expiryRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
-        return value ? (expiryRegex.test(value) ? '' : 'Invalid format (MM/YY)') : t.required;
-      case 'cvc':
-        const cvcRegex = /^[0-9]{3,4}$/;
-        return value ? (cvcRegex.test(value) ? '' : 'Invalid CVC') : t.required;
-      default:
-        return value ? '' : t.required;
-    }
-  };
 
 
   const handleSubmit = (e) => {
@@ -179,8 +142,8 @@ function App() {
         <div className="flex-1 p-6 md:border-r border-gray-200">
           <h2 className="text-xl text-black text-center font-bold mb-1">{t.register}</h2>
           <p className="text-center text-gray-500 mb-8">{t.summary}</p>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
+{/* onSubmit={handleSubmit}*/}
+          <form  className="space-y-4">
             {/* Contact Information */}
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2 md:col-span-1">
@@ -215,8 +178,6 @@ function App() {
               </div>
             </div>
 
-
-
             {/* Phone Number with Country Selector */}
             <div>
 
@@ -226,7 +187,7 @@ function App() {
               <PhoneInput
                 country={lang === 'ar' ? 'sa' : 'ae'}
                 value={formData.phone}
-                onChange={(value) => handlePhoneChange(value, null, 'phone')}
+                // onChange={(value) => handlePhoneChange(value, null, 'phone')}
                 inputClass={`!pl-14 !bg-gray-50 !border ${errors.phone ? '!border-red-500' : '!border-gray-300'} !text-gray-900 !text-sm !rounded-lg !w-full !p-2.5 focus:!ring-blue-500 focus:!border-blue-500`}
                 buttonClass="!border-none !bg-transparent !absolute !left-3 !top-1/2 !-translate-y-1/2"
                 containerClass="relative w-full"
@@ -252,10 +213,10 @@ function App() {
               <PhoneInput
                 country={lang === 'ar' ? 'sa' : 'ae'}
                 value={formData.phone}
-                onChange={(value) => handlePhoneChange(value, null, 'parentPhone')}
+                // onChange={(value) => handlePhoneChange(value, null, 'parentPhone')}
                 inputClass={`!pl-14 !bg-gray-50 !border ${errors.phone ? '!border-red-500' : '!border-gray-300'} !text-gray-900 !text-sm !rounded-lg !w-full !p-2.5 focus:!ring-blue-500 focus:!border-blue-500`}
                 buttonClass="!border-none !bg-transparent !absolute !left-3 !top-1/2 !-translate-y-1/2"
-                containerClass="relative w-full"
+                containerClass="relative w-full "
                 dropdownClass={`${lang === 'ar' ? 'rtl' : 'ltr'} !z-50`}
                 searchPlaceholder={lang === 'ar' ? 'ابحث عن دولة...' : 'Search country...'}
                 enableSearch={true}
@@ -479,7 +440,7 @@ function App() {
                 <button
                   key={plan.label}
                   onClick={() => handlePlanSelect(plan)}
-                  className={`p-2 border rounded text-center ${selectedPlan.label === plan.label
+                  className={`p-2 border rounded text-center  ${selectedPlan.label === plan.label
                     ? "bg-blue-500 text-blue-800"
                     : "bg-gray-100"
                     }`}
@@ -553,7 +514,6 @@ function App() {
               </label>
               {errors.acceptTerms && <p className="mt-1 text-xs text-red-500">{errors.acceptTerms}</p>}
             </div>
-
             {/* Order Button */}
             <Button
               variant="contained"
@@ -570,5 +530,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
