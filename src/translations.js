@@ -1,10 +1,8 @@
-
 const translations = {
   en: {
     register: "Registration & Booking at GoStudent",
     summary: "The leading platform for online tutoring.",
     phone: " Phone Number",
-    
     studentPhone: "Student's Phone Number",
     parentPhone: "Parent's Phone Number",
     email: "Email Address",

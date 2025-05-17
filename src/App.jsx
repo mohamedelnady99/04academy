@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useFormik } from 'formik'
-import * as yup from 'yup'
+// import { useFormik } from 'formik'
+// import * as yup from 'yup'
 import { FiGlobe } from 'react-icons/fi';
 import { FaCcVisa, FaCcMastercard, FaCcAmex, FaCreditCard } from 'react-icons/fa';
 import { SiSepa } from 'react-icons/si';
@@ -8,6 +8,8 @@ import { Button } from '@mui/material';
 import translations from './translations.js'; // Assuming translations are in a separate JSON file
 import arbFlag from "../public/sudy.png";
 import engFlag from "../public/eng.png";
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 function App() {
   const [lang, setLang] = useState('en');
@@ -17,6 +19,7 @@ function App() {
     firstName: '',
     lastName: '',
     phone: '',
+    parentPhone: '',
     address: '',
     streetNumber: '',
     postalCode: '',
@@ -34,7 +37,7 @@ function App() {
 
   const [errors, setErrors] = useState({});
   const t = translations[lang];
-  const [sessions, setSessions] = useState(4);
+  // const [sessions, setSessions] = useState(4);
   const plans = [
     { label: "6 MONTHS", months: 6, sessions: 8, price: 29.6, discount: 4 },
     { label: "9 MONTHS", months: 9, sessions: 8, price: 31.2, discount: 5 },
@@ -70,6 +73,22 @@ function App() {
     }
   };
 
+  // Handle phone input change
+  const handlePhoneChange = (value, data, name) => {
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: ''
+      });
+    }
+  };
+
   const validateField = (name, value) => {
     switch (name) {
       case 'email':
@@ -77,8 +96,8 @@ function App() {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return value ? (emailRegex.test(value) ? '' : t.invalidEmail) : t.required;
       case 'phone':
-        const phoneRegex = /^\+?[0-9]{8,15}$/;
-        return value ? (phoneRegex.test(value) ? '' : t.invalidPhone) : t.required;
+      case 'parentPhone':
+        return value ? (value.length >= 8 ? '' : t.invalidPhone) : t.required;
       case 'firstName':
       case 'lastName':
       case 'address':
@@ -196,41 +215,60 @@ function App() {
               </div>
             </div>
 
-            {/* Phone Number */}
+
+
+            {/* Phone Number with Country Selector */}
             <div>
+
               <label htmlFor="phone" className="block mb-1 text-sm font-medium">
                 {t.studentPhone}
               </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
+              <PhoneInput
+                country={lang === 'ar' ? 'sa' : 'ae'}
                 value={formData.phone}
-                onChange={handleInputChange}
-                className={`bg-gray-50 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} text-gray-900 text-sm rounded-lg w-full p-2.5`}
-                placeholder="+971123456789"
+                onChange={(value) => handlePhoneChange(value, null, 'phone')}
+                inputClass={`!pl-14 !bg-gray-50 !border ${errors.phone ? '!border-red-500' : '!border-gray-300'} !text-gray-900 !text-sm !rounded-lg !w-full !p-2.5 focus:!ring-blue-500 focus:!border-blue-500`}
+                buttonClass="!border-none !bg-transparent !absolute !left-3 !top-1/2 !-translate-y-1/2"
+                containerClass="relative w-full"
+                dropdownClass={`${lang === 'ar' ? 'rtl' : 'ltr'} !z-50`}
+                searchPlaceholder={lang === 'ar' ? 'ابحث عن دولة...' : 'Search country...'}
+                enableSearch={true}
+                disableSearchIcon={false}
+                inputProps={{
+                  name: 'phone',
+                  id: 'phone',
+                  placeholder: lang === 'ar' ? 'رقم الهاتف' : 'Phone Number',
+                }}
+                preferredCountries={['ae', 'sa', 'eg', 'qa', 'kw', 'bh', 'om']}
               />
+
               {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
             </div>
-
-            {/* parent Phone Number */}
-             <div>
-              <label htmlFor="phonep" className="block mb-1 text-sm font-medium">
+            {/* Parent Phone Number with Country Selector */}
+            <div>
+              <label htmlFor="parentPhone" className="block mb-1 text-sm font-medium">
                 {t.parentPhone}
               </label>
-              <input
-                type="tel"
-                id="phonep"
-                name=" parent phone"
+              <PhoneInput
+                country={lang === 'ar' ? 'sa' : 'ae'}
                 value={formData.phone}
-                onChange={handleInputChange}
-                className={`bg-gray-50 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} text-gray-900 text-sm rounded-lg w-full p-2.5`}
-                placeholder="+971123456789"
+                onChange={(value) => handlePhoneChange(value, null, 'parentPhone')}
+                inputClass={`!pl-14 !bg-gray-50 !border ${errors.phone ? '!border-red-500' : '!border-gray-300'} !text-gray-900 !text-sm !rounded-lg !w-full !p-2.5 focus:!ring-blue-500 focus:!border-blue-500`}
+                buttonClass="!border-none !bg-transparent !absolute !left-3 !top-1/2 !-translate-y-1/2"
+                containerClass="relative w-full"
+                dropdownClass={`${lang === 'ar' ? 'rtl' : 'ltr'} !z-50`}
+                searchPlaceholder={lang === 'ar' ? 'ابحث عن دولة...' : 'Search country...'}
+                enableSearch={true}
+                disableSearchIcon={false}
+                inputProps={{
+                  name: 'phone',
+                  id: 'phone',
+                  placeholder: lang === 'ar' ? 'رقم الهاتف' : 'Phone Number',
+                }}
+                preferredCountries={['ae', 'sa', 'eg', 'qa', 'kw', 'bh', 'om']}
               />
-              {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
+              {errors.parentPhone && <p className="mt-1 text-xs text-red-500">{errors.parentPhone}</p>}
             </div>
-
-
             {/* Email and Parent Email */}
             <div>
               <label htmlFor="email" className="block mb-1 text-sm font-medium">
@@ -247,10 +285,6 @@ function App() {
               />
               {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
             </div>
-
-            
-
-
             {/* Billing Address */}
             <div>
               <label className="block mb-1 text-sm font-medium">
@@ -495,7 +529,6 @@ function App() {
               </div>
               <div className="flex justify-between text-black font-bold text-base">
                 <span>{t.totalMonthly}</span>
-
                 <span>{finalPrice.toFixed(2)}€</span>
               </div>
             </div>
